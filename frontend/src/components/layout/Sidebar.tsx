@@ -1,12 +1,13 @@
 import { useRef } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Upload, BookOpen, Layers,
-  BarChart3, History, Info, Zap,
+  BarChart3, History, Info, Zap, LogOut,
 } from 'lucide-react'
+import { useUserStore } from '../../store/userStore'
 
 const links = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/upload', label: 'Upload PDF', icon: Upload },
   { to: '/review', label: 'Review', icon: BookOpen },
   { to: '/decks', label: 'Decks', icon: Layers },
@@ -39,7 +40,7 @@ function MagneticNavItem({ to, label, icon: Icon }: typeof links[0]) {
     <NavLink
       ref={itemRef}
       to={to}
-      end={to === '/'}
+      end={to === '/dashboard'}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       className="nav-item"
@@ -58,7 +59,6 @@ function MagneticNavItem({ to, label, icon: Icon }: typeof links[0]) {
     >
       {({ isActive }) => (
         <>
-          {/* Hover sweep background */}
           {!isActive && (
             <span
               className="nav-hover-bg"
@@ -94,6 +94,14 @@ function MagneticNavItem({ to, label, icon: Icon }: typeof links[0]) {
 }
 
 export function Sidebar() {
+  const { name, clearName } = useUserStore()
+  const navigate = useNavigate()
+
+  const handleSignOut = () => {
+    clearName()
+    navigate('/')
+  }
+
   return (
     <>
       <style>{`
@@ -129,33 +137,81 @@ export function Sidebar() {
               background: 'linear-gradient(135deg, var(--accent) 0%, #a594ff 100%)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               boxShadow: '0 4px 20px rgba(124,106,255,0.5)',
-              cursor: 'default',
+              cursor: 'default', flexShrink: 0,
             }}
           >
             <Zap size={18} color="#fff" />
           </div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: 17, color: 'var(--text-primary)', lineHeight: 1 }}>FlashMind</div>
-            <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2 }}>AI Study Engine</div>
+            <div style={{
+              fontWeight: 800, fontSize: 17, color: 'var(--text-primary)', lineHeight: 1,
+              letterSpacing: '-0.4px', fontFamily: "'Syne', 'Space Grotesk', sans-serif",
+            }}>
+              Recallio
+            </div>
+            <div style={{ fontSize: 9, color: 'var(--text-muted)', marginTop: 2, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+              Perfect Recall
+            </div>
           </div>
         </div>
 
-        <div style={{ height: 1, background: 'var(--border)', margin: '0 12px' }} />
+        {/* User greeting */}
+        {name && (
+          <div style={{
+            margin: '0 12px 4px',
+            padding: '10px 12px', borderRadius: 10,
+            background: 'rgba(124,106,255,0.08)',
+            border: '1px solid rgba(124,106,255,0.15)',
+          }}>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: '0.5px', marginBottom: 2 }}>
+              STUDYING AS
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
+              👋 {name}
+            </div>
+          </div>
+        )}
+
+        <div style={{ height: 1, background: 'var(--border)', margin: '8px 12px' }} />
 
         {/* Nav */}
-        <nav style={{ flex: 1, padding: '12px', display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <nav style={{ flex: 1, padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 3 }}>
           {links.map(l => <MagneticNavItem key={l.to} {...l} />)}
         </nav>
 
         {/* Footer */}
-        <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border)' }}>
-          <div
+        <div style={{ padding: '12px', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {/* Sign out */}
+          <button
+            onClick={handleSignOut}
             style={{
-              fontSize: 11, color: 'var(--text-muted)',
-              display: 'flex', alignItems: 'center', gap: 6,
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '9px 12px', borderRadius: 10, border: 'none',
+              background: 'transparent', cursor: 'pointer', width: '100%',
+              color: 'var(--text-muted)', fontSize: 13, fontWeight: 500,
+              transition: 'background 0.2s, color 0.2s',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'rgba(239,68,68,0.1)'
+              ;(e.currentTarget as HTMLButtonElement).style.color = '#ef4444'
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'transparent'
+              ;(e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)'
             }}
           >
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--green)', boxShadow: '0 0 6px var(--green)' }} />
+            <LogOut size={14} /> Back to Landing
+          </button>
+
+          <div style={{
+            fontSize: 11, color: 'var(--text-muted)',
+            display: 'flex', alignItems: 'center', gap: 6,
+            padding: '4px 12px',
+          }}>
+            <div style={{
+              width: 6, height: 6, borderRadius: '50%',
+              background: 'var(--green)', boxShadow: '0 0 6px var(--green)',
+            }} />
             Groq · SM-2 · SQLite
           </div>
         </div>
