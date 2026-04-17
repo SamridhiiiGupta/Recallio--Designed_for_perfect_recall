@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
 @import "tailwindcss";
 
 @layer base {
@@ -30,7 +31,7 @@
   body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'DM Sans', 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -42,19 +43,16 @@
 
 /* ── Global interactive feedback ────────────────────────────────────────── */
 
-/* Any button not explicitly styled gets a hover glow */
 button:not([disabled]):hover {
   filter: brightness(1.08);
 }
 
-/* Input focus glow */
 input:focus, textarea:focus {
   border-color: var(--accent) !important;
   box-shadow: 0 0 0 3px rgba(124,106,255,0.18) !important;
   outline: none;
 }
 
-/* Smooth link transitions */
 a { transition: color 0.2s, opacity 0.2s; }
 
 /* ── Keyframe animations ─────────────────────────────────────────────────── */
@@ -75,6 +73,10 @@ a { transition: color 0.2s, opacity 0.2s; }
   from { --angle: 0deg; }
   to   { --angle: 360deg; }
 }
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
 
 /* Floating animation for empty-state icons */
 .float-icon { animation: float-y 3s ease-in-out infinite; }
@@ -82,8 +84,17 @@ a { transition: color 0.2s, opacity 0.2s; }
 /* Glow pulse for primary CTAs */
 .glow-cta { animation: glow-pulse 2.5s ease-in-out infinite; }
 
+/* Animated gradient text */
+.gradient-text-animate {
+  background: linear-gradient(135deg, #7c6aff, #a594ff, #c084fc, #7c6aff);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 4s ease infinite;
+}
+
 /* ── Card 3D flip ────────────────────────────────────────────────────────── */
-/* Card 3D flip */
 .card-scene { perspective: 1200px; }
 .card-flip {
   transform-style: preserve-3d;
@@ -100,3 +111,25 @@ a { transition: color 0.2s, opacity 0.2s; }
   -webkit-backface-visibility: hidden;
 }
 .card-face-back { transform: rotateY(180deg); }
+
+/* ── Landing page specifics ──────────────────────────────────────────────── */
+
+/* Noise texture overlay for landing */
+.noise-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* Scroll-triggered fade-in utility */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up {
+  animation: fade-in-up 0.7s ease forwards;
+}
