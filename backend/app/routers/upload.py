@@ -41,7 +41,7 @@ def _run_pipeline(job_id: str, pdf_bytes: bytes, filename: str, db_url: str):
     try:
         update("parsing", 10, "Parsing PDF…")
         chunks = extract_chunks(pdf_bytes)
-        title = get_pdf_title(pdf_bytes)
+        title = filename.rsplit('.', 1)[0] if filename else get_pdf_title(pdf_bytes)
         if not chunks:
             update("error", 0, "No readable text found in PDF.", error="Empty document")
             return
