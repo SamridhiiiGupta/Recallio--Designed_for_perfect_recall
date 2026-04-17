@@ -1,0 +1,10 @@
+{
+  "name": "recallio",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"cd backend && python -m uvicorn app.main:app --reload\" \"cd frontend && npm run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
