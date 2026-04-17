@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
@@ -7,6 +8,7 @@ import { StatCard } from '../components/ui/StatCard'
 import { TiltCard } from '../components/ui/TiltCard'
 import { Spinner } from '../components/ui/Spinner'
 import { useUserStore } from '../store/userStore'
+import { getGreeting, getSubtext } from '../utils/getGreeting'  // ← NEW
 
 function fmtTime(s: number) {
   if (s < 60) return `${s}s`
@@ -25,6 +27,13 @@ export function Dashboard() {
   const { data: stats, isLoading } = useQuery({ queryKey: ['overview'], queryFn: getOverview })
   const { data: decks } = useQuery({ queryKey: ['decks'], queryFn: getDecks })
 
+  // ── GREETING ────────────────────────────────────────────────────────────────
+  // Computed ONCE on mount via lazy-init useState.
+  // This prevents the greeting from flickering/changing on re-renders while
+  // still being correct on every fresh page load / refresh.
+  const [greeting] = useState<string>(() => getGreeting(name ?? undefined))
+  // ────────────────────────────────────────────────────────────────────────────
+
   if (isLoading) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
       <Spinner size={40} />
@@ -32,22 +41,21 @@ export function Dashboard() {
   )
 
   const recentDecks = decks?.slice(0, 4) ?? []
-  const hour = new Date().getHours()
-  const greeting = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening'
-  // Use stored name if available, otherwise generic greeting
-  const displayName = name ? `, ${name}` : ''
+
+  // ── CONTEXT-AWARE SUBTEXT ────────────────────────────────────────────────────
+  const isNewUser = (stats?.total_cards ?? 0) === 0 && (stats?.total_decks ?? 0) === 0
+  const subtext = getSubtext(stats?.cards_due_today, isNewUser)
+  // ────────────────────────────────────────────────────────────────────────────
 
   return (
     <div style={{ padding: '32px', maxWidth: 1100, margin: '0 auto' }}>
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: 32 }}>
         <h1 style={{ fontSize: 34, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-          Good {greeting}{displayName} 👋
+          {greeting}
         </h1>
         <p style={{ color: 'var(--text-secondary)', marginTop: 6 }}>
-          {stats?.cards_due_today
-            ? `You have ${stats.cards_due_today} cards due for review today.`
-            : 'You\'re all caught up — great work!'}
+          {subtext}
         </p>
       </motion.div>
 
