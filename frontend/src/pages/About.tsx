@@ -5,7 +5,7 @@ const steps = [
   {
     icon: '📄',
     title: '1. Upload Your PDF',
-    desc: 'Drop any PDF — textbook chapter, lecture slides, research paper. FlashMind handles the rest.',
+    desc: 'Drop any PDF — textbook chapter, lecture slides, research paper. Recallio handles the rest.',
   },
   {
     icon: '🤖',
@@ -38,17 +38,26 @@ export function About() {
         <div className="flex items-center gap-3 mb-4">
           <div
             className="w-12 h-12 rounded-xl flex items-center justify-center"
-            style={{ background: 'var(--accent)' }}
+            style={{ background: 'linear-gradient(135deg, var(--accent) 0%, #a594ff 100%)', boxShadow: '0 0 24px rgba(124,106,255,0.5)' }}
           >
             <Zap size={22} className="text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>FlashMind</h1>
-            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>AI-Powered Spaced Repetition Engine</p>
+            <h1
+              className="text-3xl font-bold"
+              style={{
+                color: 'var(--text-primary)',
+                fontFamily: "'Syne', 'Space Grotesk', sans-serif",
+                letterSpacing: '-1px',
+              }}
+            >
+              Recallio
+            </h1>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Designed for perfect recall · AI-Powered Spaced Repetition</p>
           </div>
         </div>
         <p className="text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-          Long-term retention beats short-term cramming. FlashMind turns any PDF into a smart study deck,
+          Long-term retention beats short-term cramming. Recallio turns any PDF into a smart study deck,
           then uses the science of spaced repetition to make sure you actually remember what you learn.
         </p>
       </motion.div>
@@ -125,7 +134,7 @@ export function About() {
       <section>
         <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Built With</h2>
         <div className="flex flex-wrap gap-2">
-          {['Groq API (llama-3.3-70b)', 'FastAPI', 'React 18', 'SM-2 SRS', 'PyMuPDF', 'SQLite', 'Framer Motion', 'Recharts'].map(t => (
+          {['Groq API (llama-3.3-70b)', 'FastAPI', 'React 19', 'SM-2 SRS', 'PyMuPDF', 'SQLite', 'Framer Motion', 'Recharts', 'Zustand'].map(t => (
             <span
               key={t}
               className="px-3 py-1 rounded-full text-sm"
