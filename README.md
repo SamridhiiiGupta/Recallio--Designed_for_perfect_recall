@@ -1,4 +1,4 @@
-# FlashMind — AI-Powered Spaced Repetition Engine
+# Recallio — Designed for Perfect Recall
 
 > *Turn any PDF into a world-class study deck. Let science handle what you review and when.*
 
@@ -13,9 +13,31 @@
 
 ## What Is This?
 
-FlashMind converts any PDF — a textbook chapter, lecture notes, research paper — into a rich set of high-quality flashcards, then uses the scientifically-proven **SM-2 spaced repetition algorithm** to schedule exactly what you should study and when. Cards you know well fade away. Cards you're struggling with keep surfacing. Over time, you build genuine long-term retention — not the illusion of it.
+Recallio converts any PDF — a textbook chapter, lecture notes, research paper — into a rich set of high-quality flashcards, then uses the scientifically-proven **SM-2 spaced repetition algorithm** to schedule exactly what you should study and when. Cards you know well fade away. Cards you're struggling with keep surfacing. Over time, you build genuine long-term retention — not the illusion of it.
 
 The LLM (Groq) doesn't just scrape surface-level facts. It generates cards across multiple cognitive levels: definitions, relationships, edge cases, worked examples, and conceptual "why" questions — the kind a great teacher would write.
+
+This isn't a utility. It's a complete, polished learning experience — from a premium animated landing page down to a smooth, keyboard-driven review session.
+
+---
+
+## Product Experience
+
+Recallio is designed to feel like a real product, not a side project.
+
+**Landing Page (`/`)** — A fully animated hero with parallax scrolling, an interactive 3D flashcard demo you can flip right on the page, feature cards with hover glow, student testimonials, and a clear CTA flow. Built to impress at first glance.
+
+**Onboarding (`/onboarding`)** — A focused, minimal name-input screen. No account. No friction. Just a name, stored locally via Zustand, and you're in.
+
+**User Flow:**
+```
+/ (Landing)
+  → "Start Learning Free"
+      → if returning user  → /dashboard
+      → if new user        → /onboarding → enter name → /dashboard
+```
+
+**Inside the app:** Every page lives inside a dark, space-themed UI with floating orb animations, smooth page transitions via Framer Motion, and a persistent sidebar that greets you by name. The review session is keyboard-first, distraction-free, and satisfying to use.
 
 ---
 
@@ -23,15 +45,31 @@ The LLM (Groq) doesn't just scrape surface-level facts. It generates cards acros
 
 | Area | What It Does |
 |---|---|
+| **Landing Page** | Animated hero, interactive flashcard demo, testimonials, CTA — a full product landing |
+| **Onboarding** | Name input with quick-select chips; stored locally, no account required |
 | **PDF Ingestion** | Upload any PDF; smart chunking + Groq extracts high-quality cards (15–40 per doc) |
-| **Card Types** | Basic Q&A, Cloze deletion, Definition, Worked Example, Conceptual |
+| **Card Types** | Basic Q&A, Cloze deletion, Definition, Worked Example, Conceptual, Edge Case |
 | **SM-2 SRS** | Cards scheduled by ease factor + interval; you never manually decide what to study |
-| **Review Session** | Flip animation, self-rating (Again / Hard / Good / Easy), keyboard shortcuts |
-| **Dashboard** | Cards due today, streak, mastery %, upcoming reviews |
+| **Review Session** | 3D flip animation, self-rating (Again / Hard / Good / Easy), keyboard shortcuts |
+| **Dashboard** | Cards due today, streak, mastery %, upcoming reviews — personalized by name |
 | **Analytics** | Heatmap, retention curve, cards-per-day chart, per-deck mastery breakdown |
 | **History** | Every session logged — date, deck, duration, accuracy, cards covered |
 | **Deck Manager** | Browse, search, tag, rename, delete decks |
 | **About** | How the app works, algorithm explainer, Groq attribution |
+
+---
+
+## Screenshots
+
+| Landing | Dashboard | Review |
+|---|---|---|
+| ![Landing](./screenshots/landing.png) | ![Dashboard](./screenshots/dashboard.png) | ![Review](./screenshots/review.png) |
+
+| Upload | Decks | Analytics |
+|---|---|---|
+| ![Upload](./screenshots/upload.png) | ![Decks](./screenshots/decks.png) | ![Analytics](./screenshots/analytics.png) |
+
+> **Live demo:** [github.com/SamridhiiiGupta/Recallio--Designed_for_perfect_recall](https://github.com/SamridhiiiGupta/Recallio--Designed_for_perfect_recall)
 
 ---
 
@@ -90,7 +128,7 @@ The LLM (Groq) doesn't just scrape surface-level facts. It generates cards acros
 | `vite` | 5 | Build tool |
 | `tailwindcss` | 3 | Styling |
 | `framer-motion` | 11 | Card flip + page animations |
-| `zustand` | 4 | Global state (current session, deck) |
+| `zustand` | 4 | Global state (user identity, session, deck) |
 | `@tanstack/react-query` | 5 | Server state, caching, refetch |
 | `recharts` | 2 | Analytics charts |
 | `react-router-dom` | 6 | Client-side routing |
@@ -103,13 +141,10 @@ The LLM (Groq) doesn't just scrape surface-level facts. It generates cards acros
 ## Project Structure
 
 ```
-flashcard-engine/
+recallio/
 ├── backend/
+│   ├── alembic/                     # DB migration scripts
 │   ├── app/
-│   │   ├── main.py                  # FastAPI app + CORS + routers
-│   │   ├── database.py              # SQLAlchemy engine + session
-│   │   ├── models.py                # ORM models (Deck, Card, SRS, Session)
-│   │   ├── schemas.py               # Pydantic request/response schemas
 │   │   ├── routers/
 │   │   │   ├── upload.py            # POST /upload — PDF ingestion pipeline
 │   │   │   ├── decks.py             # CRUD for decks
@@ -117,53 +152,70 @@ flashcard-engine/
 │   │   │   ├── review.py            # Session start/answer/end
 │   │   │   ├── analytics.py         # Charts data endpoints
 │   │   │   └── history.py           # Study session history
-│   │   └── services/
-│   │       ├── pdf_parser.py        # PyMuPDF → structured text chunks
-│   │       ├── card_generator.py    # Groq API — prompt + parse + validate
-│   │       └── srs_engine.py        # SM-2 algorithm + scheduling
-│   ├── alembic/                     # DB migration scripts
-│   ├── requirements.txt
-│   └── .env.example
+│   │   ├── services/
+│   │   │   ├── pdf_parser.py        # PyMuPDF → structured text chunks
+│   │   │   ├── card_generator.py    # Groq API — prompt + parse + validate
+│   │   │   └── srs_engine.py        # SM-2 algorithm + scheduling
+│   │   ├── config.py                # App config + env var loading
+│   │   ├── database.py              # SQLAlchemy engine + session
+│   │   ├── main.py                  # FastAPI app + CORS + routers
+│   │   ├── models.py                # ORM models (Deck, Card, SRS, Session)
+│   │   └── schemas.py               # Pydantic request/response schemas
+│   ├── .env.example
+│   ├── alembic.ini
+│   ├── flashmind.db                 # Auto-created on first run
+│   └── requirements.txt
 │
 ├── frontend/
+│   ├── public/
+│   │   ├── favicon.svg
+│   │   └── icons.svg
 │   ├── src/
-│   │   ├── main.tsx
-│   │   ├── App.tsx                  # Router setup
 │   │   ├── api/
 │   │   │   └── client.ts            # Axios instance + typed API calls
+│   │   ├── assets/
+│   │   │   └── hero.png
 │   │   ├── components/
-│   │   │   ├── layout/
-│   │   │   │   ├── Sidebar.tsx      # Navigation
-│   │   │   │   └── Layout.tsx       # Page wrapper
 │   │   │   ├── cards/
 │   │   │   │   ├── FlashCard.tsx    # 3D flip card component
 │   │   │   │   └── RatingBar.tsx    # Again/Hard/Good/Easy buttons
-│   │   │   ├── charts/
-│   │   │   │   ├── Heatmap.tsx      # GitHub-style activity heatmap
-│   │   │   │   ├── RetentionCurve.tsx
-│   │   │   │   └── DeckMasteryBar.tsx
-│   │   │   └── ui/                  # Button, Badge, Card, Modal, Spinner
+│   │   │   ├── layout/
+│   │   │   │   ├── FloatingBackground.tsx  # Animated orb/particle background
+│   │   │   │   ├── Layout.tsx       # Page wrapper
+│   │   │   │   └── Sidebar.tsx      # Navigation + user greeting
+│   │   │   └── ui/
+│   │   │       ├── Badge.tsx
+│   │   │       ├── Spinner.tsx
+│   │   │       ├── StatCard.tsx     # Dashboard stat tiles
+│   │   │       └── TiltCard.tsx     # Mouse-tilt interactive card
+│   │   ├── hooks/
+│   │   │   └── useCardTilt.ts       # Mouse parallax tilt hook
 │   │   ├── pages/
-│   │   │   ├── Dashboard.tsx        # Home — stats + due cards + streak
-│   │   │   ├── Upload.tsx           # Drag-and-drop PDF → card generation
-│   │   │   ├── Review.tsx           # Active study session
-│   │   │   ├── Decks.tsx            # All decks grid/list view
-│   │   │   ├── DeckDetail.tsx       # Single deck — all cards + edit
-│   │   │   ├── History.tsx          # Past sessions timeline
+│   │   │   ├── About.tsx            # App info + algorithm explainer
 │   │   │   ├── Analytics.tsx        # Full analytics dashboard
-│   │   │   └── About.tsx            # App info + algorithm explainer
+│   │   │   ├── Dashboard.tsx        # Home — stats + due cards + streak
+│   │   │   ├── DeckDetail.tsx       # Single deck — all cards + edit
+│   │   │   ├── Decks.tsx            # All decks grid view
+│   │   │   ├── History.tsx          # Past sessions timeline
+│   │   │   ├── Landing.tsx          # Animated landing page
+│   │   │   ├── Onboarding.tsx       # Name input + entry flow
+│   │   │   ├── Review.tsx           # Active study session
+│   │   │   └── Upload.tsx           # Drag-and-drop PDF → card generation
 │   │   ├── store/
 │   │   │   ├── reviewStore.ts       # Active session state
-│   │   │   └── uiStore.ts           # Sidebar open, theme, etc.
-│   │   └── utils/
-│   │       ├── dates.ts             # Date formatting helpers
-│   │       └── srs.ts               # Client-side SRS display helpers
+│   │   │   └── userStore.ts         # Zustand store — user name, persistence
+│   │   ├── utils/
+│   │   │   └── getGreeting.ts       # Time-based greeting helper
+│   │   ├── App.css
+│   │   ├── App.tsx                  # Router setup (Landing → Onboarding → App)
+│   │   ├── index.css
+│   │   └── main.tsx
 │   ├── index.html
-│   ├── tailwind.config.ts
 │   ├── vite.config.ts
 │   └── package.json
 │
-├── flashmind.db                     # Auto-created on first run
+├── package.json                     # Root — single `npm run dev` starts everything
+├── start.sh                         # Shell bootstrap script
 ├── README.md
 └── CLAUDE.md
 ```
@@ -364,7 +416,22 @@ Target: **15–40 high-quality cards per PDF**, not 100 shallow ones.
 
 ## UI Pages
 
-### Dashboard
+### Landing (`/`)
+- Animated hero with cycling text (Smarter / Faster / Deeper / Longer)
+- Parallax scroll effects and floating particle background
+- Interactive 3D flashcard demo — click to flip, right on the page
+- Feature cards with hover glow effects
+- Student testimonials section
+- Dual CTA: "Start Learning Free" → onboarding / dashboard
+
+### Onboarding (`/onboarding`)
+- Centered name-input card — clean, minimal, focused
+- Quick-select name chips for fast entry
+- Name persisted via Zustand + localStorage — no account required
+- "Stored locally. No account required." — trust signal on screen
+
+### Dashboard (`/dashboard`)
+- Personalized greeting using stored user name
 - Today's due cards count with a "Start Review" CTA
 - Current study streak (days)
 - Total mastered / total cards ratio
@@ -413,10 +480,15 @@ Target: **15–40 high-quality cards per PDF**, not 100 shallow ones.
 - Node.js 20+
 - A Groq API key — get one free at [console.groq.com](https://console.groq.com)
 
-### 1. Clone & Backend Setup
+### 1. Clone the repo
 ```bash
-git clone <repo-url>
-cd flashcard-engine/backend
+git clone https://github.com/SamridhiiiGupta/Recallio--Designed_for_perfect_recall.git
+cd Recallio--Designed_for_perfect_recall
+```
+
+### 2. Set up the backend
+```bash
+cd backend
 
 python -m venv venv
 source venv/bin/activate        # Windows: venv\Scripts\activate
@@ -424,21 +496,26 @@ source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
 cp .env.example .env
-# Add your GROQ_API_KEY to .env
+# Open .env and add your GROQ_API_KEY
 
 alembic upgrade head             # Creates flashmind.db with schema
-uvicorn app.main:app --reload    # Starts on http://localhost:8000
 ```
 
-### 2. Frontend Setup
+### 3. Install frontend dependencies
 ```bash
 cd ../frontend
 npm install
-npm run dev                      # Starts on http://localhost:5173
 ```
 
-### Open
-Visit **http://localhost:5173** — upload a PDF and start studying.
+### 🚀 Run (single command)
+
+From the project root:
+
+```bash
+npm run dev
+```
+
+This starts **both** the FastAPI backend and the Vite frontend in one terminal. Visit **[http://localhost:5173](http://localhost:5173)** — upload a PDF and start studying.
 
 ---
 
@@ -459,12 +536,12 @@ CARDS_PER_CHUNK=5                # Cards to generate per text chunk
 ## Development Commands
 
 ```bash
-# Backend
+# Backend (if running separately)
 uvicorn app.main:app --reload --port 8000
 alembic revision --autogenerate -m "description"
 alembic upgrade head
 
-# Frontend
+# Frontend (if running separately)
 npm run dev          # Dev server
 npm run build        # Production build
 npm run lint         # ESLint check
@@ -478,25 +555,27 @@ rm flashmind.db && alembic upgrade head
 
 ## Roadmap
 
-### Phase 1 — Core (Current)
+### Phase 1 — Core ✅
 - [x] Project architecture + README
-- [ ] Backend: DB models + migrations
-- [ ] Backend: PDF parsing service
-- [ ] Backend: Groq card generation service
-- [ ] Backend: SM-2 SRS engine
-- [ ] Backend: All API routes
-- [ ] Frontend: Layout + routing + dark theme
-- [ ] Frontend: Upload page + progress flow
-- [ ] Frontend: Review session (flip card + rating)
-- [ ] Frontend: Dashboard
-- [ ] Frontend: Decks page
+- [x] Backend: DB models + migrations
+- [x] Backend: PDF parsing service
+- [x] Backend: Groq card generation service
+- [x] Backend: SM-2 SRS engine
+- [x] Backend: All API routes
+- [x] Frontend: Layout + routing + dark theme
+- [x] Frontend: Upload page + progress flow
+- [x] Frontend: Review session (flip card + rating)
+- [x] Frontend: Dashboard
 
-### Phase 2 — Polish
-- [ ] Frontend: Analytics dashboard
-- [ ] Frontend: History timeline
-- [ ] Frontend: About page
+### Phase 2 — Polish ✅
+- [x] Frontend: Analytics dashboard
+- [x] Frontend: History timeline
+- [x] Frontend: About page
+- [x] Keyboard shortcuts + accessibility
+- [x] Animated landing page + onboarding flow
+- [x] Zustand-persisted user identity (no auth required)
+- [x] Single-command dev setup (`npm run dev`)
 - [ ] Card editing UI
-- [ ] Keyboard shortcuts + accessibility
 - [ ] Export deck as Anki-compatible `.apkg`
 
 ### Phase 3 — Delight
@@ -514,4 +593,4 @@ Groq's LPU inference hardware delivers sub-second latency on large models. For a
 
 ---
 
-*Built for Cuemath — because long-term retention beats short-term cramming, every time.*
+*Long-term retention beats short-term cramming. Every time.*
