@@ -6,6 +6,7 @@ import { getOverview, getDecks } from '../api/client'
 import { StatCard } from '../components/ui/StatCard'
 import { TiltCard } from '../components/ui/TiltCard'
 import { Spinner } from '../components/ui/Spinner'
+import { useUserStore } from '../store/userStore'
 
 function fmtTime(s: number) {
   if (s < 60) return `${s}s`
@@ -20,6 +21,7 @@ function deckGradient(title: string) {
 
 export function Dashboard() {
   const navigate = useNavigate()
+  const { name } = useUserStore()
   const { data: stats, isLoading } = useQuery({ queryKey: ['overview'], queryFn: getOverview })
   const { data: decks } = useQuery({ queryKey: ['decks'], queryFn: getDecks })
 
@@ -32,13 +34,15 @@ export function Dashboard() {
   const recentDecks = decks?.slice(0, 4) ?? []
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening'
+  // Use stored name if available, otherwise generic greeting
+  const displayName = name ? `, ${name}` : ''
 
   return (
     <div style={{ padding: '32px', maxWidth: 1100, margin: '0 auto' }}>
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: 32 }}>
         <h1 style={{ fontSize: 34, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-          Good {greeting} 👋
+          Good {greeting}{displayName} 👋
         </h1>
         <p style={{ color: 'var(--text-secondary)', marginTop: 6 }}>
           {stats?.cards_due_today
@@ -122,7 +126,6 @@ export function Dashboard() {
                   }}
                   maxTilt={10}
                 >
-                  {/* Mini gradient strip */}
                   <div style={{ height: 4, background: deckGradient(deck.title), borderRadius: '14px 14px 0 0' }} />
                   <div style={{ padding: '16px 18px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
