@@ -4,11 +4,11 @@ from app.config import settings
 from app.database import engine, Base
 from app.routers import upload, decks, cards, review, analytics, history
 
-# Create all tables on startup (no-op if already exist)
+# Create all tables on startup (safe no-op if they already exist)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="FlashMind API",
+    title="Recallio API",
     description="AI-powered spaced repetition flashcard engine",
     version="1.0.0",
 )
@@ -32,3 +32,8 @@ app.include_router(history.router)
 @app.get("/api/health")
 def health():
     return {"status": "ok", "version": "1.0.0"}
+
+
+@app.on_event("startup")
+async def startup_message():
+    print(f"✅ Recallio API started | CORS origin: {settings.cors_origin}")
