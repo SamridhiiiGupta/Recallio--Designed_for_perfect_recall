@@ -1,7 +1,11 @@
 import axios from 'axios'
 
+// In development: reads from frontend/.env  → VITE_API_URL=http://localhost:8000
+// In production:  reads from Vercel env var → VITE_API_URL=https://your-app.onrender.com
+const BASE = (import.meta.env.VITE_API_URL ?? 'http://localhost:8000') + '/api'
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: BASE,
   headers: { 'Content-Type': 'application/json' },
 })
 
