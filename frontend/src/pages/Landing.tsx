@@ -897,7 +897,7 @@ function LandingBackground() {
       speed: Math.random() * 0.008 + 0.003,
     }))
 
-    const draw = (t: number) => {
+    const draw = (_t: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       drawGrid()
 
