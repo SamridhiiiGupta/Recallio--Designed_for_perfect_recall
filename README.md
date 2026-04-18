@@ -63,7 +63,7 @@ Recallio is designed to feel like a real product, not a side project.
 
 | Landing | Dashboard | Review |
 |---|---|---|
-| ![Landing](images/landing page.png) | ![Dashboard](./screenshots/dashboard.png) | ![Review](./screenshots/review.png) |
+| ![Landing](images/landing-page.png) | ![Dashboard](./screenshots/dashboard.png) | ![Review](./screenshots/review.png) |
 
 | Upload | Decks | Analytics |
 |---|---|---|
