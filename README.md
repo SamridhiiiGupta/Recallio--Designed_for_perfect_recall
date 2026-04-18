@@ -59,16 +59,41 @@ Recallio is designed to feel like a real product, not a side project.
 
 ---
 
-## Screenshots
+## 🚀 Application Screens
 
-| Landing | Dashboard | Review |
-|---|---|---|
-| ![Landing](images/landing-page.png) | ![Dashboard](images/dashboard.png) | ![Review](images/review.png) |
+### 🌌 Landing Page  
+![Landing](images/landing-page.png)  
+The first impression of Recallio — a visually immersive hero section that highlights the core idea of **AI-powered spaced repetition learning**, with strong call-to-action buttons to start learning instantly.
 
-| Upload | Decks | Analytics |
-|---|---|---|
-| ![Upload](images/upload.png) | ![Decks](images/decks.png) | ![Analytics](images/analytics.png) |
+---
 
+### 📊 Dashboard  
+![Dashboard](images/dashboard.png)  
+Your personal command center — shows **cards due, streaks, study time, accuracy, and recent decks**, helping users track progress and stay consistent.
+
+---
+
+### 🔁 Review Interface  
+![Review](images/review.png)  
+A distraction-free flashcard experience powered by **SM-2 spaced repetition**, where users rate difficulty (Again, Hard, Good, Easy) to optimize memory retention.
+
+---
+
+### 📤 Upload PDF  
+![Upload](images/upload.png)  
+Upload any study material (PDFs) and instantly convert it into **AI-generated flashcards**, including key concepts and worked examples.
+
+---
+
+### 📚 Decks  
+![Decks](images/decks.png)  
+Organized view of all study decks — users can **review, browse, and track mastery levels** for each subject or topic.
+
+---
+
+### 📈 Analytics  
+![Analytics](images/analytics.png)  
+Deep insights into learning behavior — includes **study streaks, activity heatmaps, accuracy trends, and deck mastery breakdowns**.
 > **Live demo:** [github.com/SamridhiiiGupta/Recallio--Designed_for_perfect_recall](https://github.com/SamridhiiiGupta/Recallio--Designed_for_perfect_recall)
 
 ---
