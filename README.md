@@ -67,7 +67,7 @@ Recallio is designed to feel like a real product, not a side project.
 
 | Upload | Decks | Analytics |
 |---|---|---|
-| ![Upload](./screenshots/upload.png) | ![Decks](./screenshots/decks.png) | ![Analytics](./screenshots/analytics.png) |
+| ![Upload](images/upload.png) | ![Decks](./screenshots/decks.png) | ![Analytics](./screenshots/analytics.png) |
 
 > **Live demo:** [github.com/SamridhiiiGupta/Recallio--Designed_for_perfect_recall](https://github.com/SamridhiiiGupta/Recallio--Designed_for_perfect_recall)
 
