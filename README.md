@@ -112,7 +112,7 @@ Organized view of all study decks — users can **review, browse, and track mast
 ### 📈 Analytics  
 ![Analytics](images/analytics.png)  
 Deep insights into learning behavior — includes **study streaks, activity heatmaps, accuracy trends, and deck mastery breakdowns**.
-> **Live demo:** [github.com/SamridhiiiGupta/Recallio--Designed_for_perfect_recall](https://github.com/SamridhiiiGupta/Recallio--Designed_for_perfect_recall)
+> **Live demo:** [Recallio--Designed_for_perfect_recall](https://recallio-designed-for-perfect-recal-seven.vercel.app/)
 
 ---
 
