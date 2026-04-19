@@ -11,6 +11,24 @@
 
 ---
 
+## 🌐 Live Deployment
+
+| | URL |
+|---|---|
+| **Frontend (Vercel)** | [recallio-designed-for-perfect-recal-seven.vercel.app](https://recallio-designed-for-perfect-recal-seven.vercel.app) |
+| **Backend (Render)** | [recallio-backend.onrender.com](https://recallio-backend.onrender.com) |
+| **Health Check** | [/api/health](https://recallio-backend.onrender.com/api/health) |
+| **API Docs** | [/docs](https://recallio-backend.onrender.com/docs) |
+
+> ⚠️ **Render free tier sleeps after 15 min of inactivity.** Before opening the app, wake the backend first:
+> 1. Open `https://recallio-backend.onrender.com/api/health`
+> 2. Wait for `{"status":"ok","version":"1.0.0"}`
+> 3. Then open the frontend
+
+> ⚠️ **Groq free tier limit:** 100,000 tokens/day per account. If card generation fails with `"LLM returned empty"`, wait ~24 hours for the limit to reset.
+
+---
+
 ## What Is This?
 
 Recallio converts any PDF — a textbook chapter, lecture notes, research paper — into a rich set of high-quality flashcards, then uses the scientifically-proven **SM-2 spaced repetition algorithm** to schedule exactly what you should study and when. Cards you know well fade away. Cards you're struggling with keep surfacing. Over time, you build genuine long-term retention — not the illusion of it.
@@ -139,8 +157,8 @@ Deep insights into learning behavior — includes **study streaks, activity heat
 | `uvicorn` | 0.30 | ASGI server |
 | `sqlalchemy` | 2.0 | ORM |
 | `alembic` | 1.13 | DB migrations |
-| `pydantic` | 2.x | Request/response validation |
-| `pymupdf` (fitz) | 1.24 | PDF text + structure extraction |
+| `pydantic` | 2.7.4 | Request/response validation |
+| `pymupdf` (fitz) | 1.24.3 | PDF text + structure extraction |
 | `groq` | latest | LLM client (card generation) |
 | `python-multipart` | — | File uploads |
 | `python-dotenv` | — | Env var loading |
@@ -546,15 +564,40 @@ This starts **both** the FastAPI backend and the Vite frontend in one terminal. 
 
 ## Environment Variables
 
+### Local Development
+
 ```bash
 # backend/.env
-GROQ_API_KEY=gsk_...             # Required — Groq API key
-GROQ_MODEL=llama-3.3-70b-versatile  # Model to use for card generation
+GROQ_API_KEY=gsk_...                    # Required — Groq API key
+GROQ_MODEL=llama-3.3-70b-versatile     # Model to use for card generation
 DATABASE_URL=sqlite:///./flashmind.db
 CORS_ORIGIN=http://localhost:5173
 MAX_PDF_SIZE_MB=50
-CARDS_PER_CHUNK=5                # Cards to generate per text chunk
+CARDS_PER_CHUNK=5                       # Cards to generate per text chunk
+
+# frontend/.env  (not committed)
+VITE_API_URL=http://localhost:8000
 ```
+
+### Production (Render + Vercel)
+
+**Render (backend)**
+
+| Key | Value |
+|---|---|
+| `GROQ_API_KEY` | Your Groq API key |
+| `GROQ_MODEL` | `llama-3.3-70b-versatile` |
+| `DATABASE_URL` | `sqlite:///./flashmind.db` |
+| `CORS_ORIGIN` | Your Vercel frontend URL |
+| `MAX_PDF_SIZE_MB` | `50` |
+| `CARDS_PER_CHUNK` | `5` |
+| `PYTHON_VERSION` | `3.11.9` |
+
+**Vercel (frontend)**
+
+| Key | Value |
+|---|---|
+| `VITE_API_URL` | `https://recallio-backend.onrender.com` |
 
 ---
 
@@ -600,6 +643,8 @@ rm flashmind.db && alembic upgrade head
 - [x] Animated landing page + onboarding flow
 - [x] Zustand-persisted user identity (no auth required)
 - [x] Single-command dev setup (`npm run dev`)
+- [x] Deployed: Vercel (frontend) + Render (backend)
+- [x] Dynamic API URL via `VITE_API_URL` env var
 - [ ] Card editing UI
 - [ ] Export deck as Anki-compatible `.apkg`
 
